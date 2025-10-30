@@ -1,22 +1,25 @@
-int side = 300; //setarea unei variabila
-
-//ordinea pasilor - setarile principale
+int side = 300;
+PImage img;
 
 void setup() {
-  size(900, 900); // dimensiunea suprafetei
-  // fullScreen(); // intra automat in modul fullscreen
-  print(width); // scrie datele in consola - util pentru programator // nu se vede
+  size(900, 900);
+  img = loadImage("Ginger-Kitten.png");
+  print(img.width);
+  if(img.width > img.height){
+    img.resize(width, 0);
+  }
+  else
+    img.resize(0, height);
   rectMode(CENTER);
-  noFill(); //patratul sa fie gol
-  stroke(255, 0, 0); //culoare laturii
-  strokeWeight(20); //grosimea laturii
+  noFill(); 
+  stroke(255, 0, 0); 
+  strokeWeight(10); 
 }
 
-//ordinea pasilor - ce se deseneaza si ordinea parametrilor definiti
-
 void draw() {
-  background(0, 0, 100); //fundal albastru inchis
-  if (mouseX + mouseY > 0){ //both should be positive, so use arithmetics
-    rect(mouseX, mouseY, side, side); //cursorul sa fie in centru
+  background(0, 0, 100);
+  image(img, width/2 - img.width/2, height/2 - img.height/2); 
+  if (mouseX + mouseY > 0){
+    rect(mouseX, mouseY, side, side);
   } 
 }
