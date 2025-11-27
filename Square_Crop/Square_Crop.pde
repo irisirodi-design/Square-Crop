@@ -7,8 +7,6 @@ PImage c;
 int cropcount;
 
 
-
-
 void setup() {
   pixelDensity(1);
   size(900, 900);
@@ -35,7 +33,6 @@ void setup() {
     String[] cropsfilenames = cropsfolder.list();
     cropcount = cropsfilenames.length ;
   }
-
 
   //set initial image
   if (imgs.length > 0) {
