@@ -3,11 +3,14 @@ int side = 300;
 PImage[] imgs;
 int currentImage = 0;
 PImage img;
+PImage c;
+int cropcount;
 
 
 
 
 void setup() {
+  pixelDensity(1);
   size(900, 900);
   rectMode(CENTER);
   noFill();
@@ -26,6 +29,11 @@ void setup() {
       noLoop();
       break;
     }
+  }
+  File cropsfolder = new File(sketchPath("crops"));
+  if (cropsfolder.exists()) {
+    String[] cropsfilenames = cropsfolder.list();
+    cropcount = cropsfilenames.length ;
   }
 
 
@@ -55,5 +63,10 @@ void mousePressed() {
       currentImage = 0;
     }
     img = imgs[currentImage];
+  }
+  if (mouseButton == LEFT ) {
+    PImage c = img.get(mouseX - side/2, mouseY -side/2, side, side );
+    cropcount ++;
+    c.save("crops/"+ cropcount +".png");
   }
 }
