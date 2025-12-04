@@ -3,6 +3,7 @@ int side = 512;
 PImage[] imgs;
 int currentImage = 0;
 PImage img;
+int imgcount;
 int cropcount;
 
 boolean dragging = false;
@@ -29,11 +30,12 @@ void setup() {
   imgs = new PImage [filenames.length];
   for ( int i = 0; i < filenames.length; i++) {
     if (filenames[i].endsWith(".jpg") || filenames[i].endsWith(".jpeg") || filenames[i].endsWith(".png")) {
-      imgs[i] = loadImage(filenames[i]);
+      imgs[imgcount] = loadImage(filenames[i]);
+      imgcount++;
     } else {
-      println(filenames[i]+ " ERROR:Data folder contains non image");
-      noLoop();
-      break;
+      println(filenames[i]+ " WARNING: Data folder contains non image");
+      //noLoop();
+      //break;
     }
   }
   File cropsfolder = new File(sketchPath("crops"));
@@ -43,7 +45,7 @@ void setup() {
   }
 
   //set initial image
-  if (imgs.length > 0) {
+  if (imgcount > 0) {
     currentImage = 0;
     img = imgs[currentImage];
     scaledImg = img.copy();
@@ -66,7 +68,7 @@ void draw() {
 void mousePressed() {
   if (mouseButton == RIGHT) {
     currentImage++;
-    if (currentImage == imgs.length) {
+    if (currentImage == imgcount) {
       currentImage = 0;
     }
     img = imgs[currentImage];
