@@ -7,21 +7,27 @@ PImage img;
 int cropcount = 0;
 int messageTimer = 0;
 String messageText = "";
+boolean space = false;
+float imgX;
+float imgY;
+
 
 void setup() {
   pixelDensity(1);
-  size(900, 900);
+  size(600, 600);
   rectMode(CENTER);
   noFill();
   stroke(255, 0, 0);
   strokeWeight(10);
 
-  loadImages();       // Load images from data folder
-  loadCropCount();    // Count existing crops
+  loadImages();      // Load images from data folder
+  loadCropCount();   // Count existing crops
 
   if (imgs.length > 0) {
     currentImage = 0;
     img = imgs[currentImage];
+    imgX = width/2 - img.width/2;
+    imgY = height/2 - img.height/2;
   }
 }
 
@@ -29,8 +35,8 @@ void draw() {
   background(0, 0, 100);
 
   drawCurrentImage(); //Drawing the crop rectangle
-  drawCropRectangle();//Drawing the currently selected image 
-  drawNotification();//Drawing the notification text
+  drawCropRectangle();//Drawing the currently selected image
+  drawNotification(); //Drawing the notification text
 }
 
 void mousePressed() {
@@ -40,7 +46,6 @@ void mousePressed() {
     cropImageAtMouse();//Cropping the current square
   }
 }
-
 
 void loadImages() {
   File folder = new File(dataPath(""));
@@ -60,6 +65,7 @@ void loadImages() {
 
 void loadCropCount() {
   File cropsFolder = new File(sketchPath("crops"));
+
   if (cropsFolder.exists()) {
     String[] cropsFiles = cropsFolder.list();
     cropcount = cropsFiles.length;
@@ -68,19 +74,11 @@ void loadCropCount() {
 
 void drawCurrentImage() {
   if (img == null) return;
-
-  if (img.width > img.height) {
-    img.resize(width, 0);
-  } else {
-    img.resize(0, height);
-  }
-
-  image(img, width/2 - img.width/2, height/2 - img.height/2);
+  image(img, imgX, imgY);
 }
 
 void drawCropRectangle() {
   rect(mouseX, mouseY, side, side);
-
 }
 
 void drawNotification() {
@@ -107,19 +105,46 @@ void drawNotification() {
 
 void nextImage() {
   currentImage++;
+
   if (currentImage >= imgs.length) {
     currentImage = 0;
   }
   img = imgs[currentImage];
+  imgX = width/2 - img.width/2;
+  imgY = height/2 - img.height/2;
 }
 
 void cropImageAtMouse() {
   if (img == null) return;
+  if (space) return;
 
-  PImage cropped = img.get(mouseX - side/2, mouseY - side/2, side, side);
+  int cropX = int(mouseX - imgX - side/2);
+  int cropY = int(mouseY - imgY - side/2);
+
+  PImage cropped = img.get(cropX, cropY, side, side);
   cropcount++;
   cropped.save("crops/" + cropcount + ".png");
 
   messageText = "image cropped";
   messageTimer = 60;
+}
+
+void keyPressed() {
+  if (key == ' ') {
+    space = true;
+  }
+}
+
+void keyReleased() {
+  if (key == ' ') {
+    space = false;
+  }
+}
+
+void mouseDragged() {
+  if (!space) return;
+  int movedX = mouseX - pmouseX;
+  int movedY = mouseY - pmouseY;
+  imgX = imgX + movedX;
+  imgY = imgY + movedY;
 }
