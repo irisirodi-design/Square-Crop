@@ -10,6 +10,9 @@ String messageText = "";
 boolean space = false;
 float imgX;
 float imgY;
+float zoom = 1.0;
+float minZoom = 0.5;
+float maxZoom = 6.0;
 
 
 void setup() {
@@ -47,6 +50,21 @@ void mousePressed() {
   }
 }
 
+void mouseWheel(MouseEvent event){
+  float wheelDelta = event.getCount();
+  
+  //zoom in and out based on wheel direction
+  if( wheelDelta < 0) {
+    zoom *= 1.1;
+  } else {
+    zoom *= 0.9;
+  }
+  
+  zoom = constrain(zoom, minZoom, maxZoom);
+  println("Zoom Level:" + zoom);
+}
+
+
 void loadImages() {
   File folder = new File(dataPath(""));
   String[] filenames = folder.list();
@@ -74,7 +92,12 @@ void loadCropCount() {
 
 void drawCurrentImage() {
   if (img == null) return;
+  pushMatrix();
+  translate(width/2, height/2);
+  scale(zoom);
+  translate(-width/2, -height/2); 
   image(img, imgX, imgY);
+  popMatrix();
 }
 
 void drawCropRectangle() {
